@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>NightPulse | Register Patient</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+
+body{
+background:#f4f7fb;
+font-family:Segoe UI;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+height:100vh;
+background:#1f2d3d;
+color:white;
+padding:25px 15px;
+position:fixed;
+width:230px;
+}
+
+.sidebar h3{
+color:#4dabf7;
+margin-bottom:30px;
+text-align:center;
+}
+
+.sidebar a{
+display:block;
+color:white;
+padding:12px;
+text-decoration:none;
+border-radius:8px;
+margin-bottom:10px;
+transition:0.2s;
+}
+
+.sidebar a:hover{
+background:#2f3e50;
+padding-left:18px;
+}
+
+/* CONTENT */
+
+.content{
+margin-left:250px;
+padding:30px;
+}
+
+/* FORM CARD */
+
+.form-card{
+background:white;
+padding:30px;
+border-radius:15px;
+box-shadow:0 10px 25px rgba(0,0,0,0.05);
+margin-bottom:25px;
+}
+
+.form-control, .form-select{
+border-radius:8px;
+padding:10px;
+}
+
+.section-title{
+font-weight:600;
+margin-bottom:15px;
+}
+
+.btn-register{
+background:#4dabf7;
+border:none;
+padding:12px;
+font-weight:bold;
+border-radius:8px;
+}
+
+.btn-register:hover{
+background:#339af0;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+<h3>NightPulse</h3>
+
+<a href="/admin"><i class="bi bi-speedometer2"></i> Dashboard</a>
+<a href="/add_patient"><i class="bi bi-person-plus"></i> Add Patient</a>
+<a href="/patients"><i class="bi bi-people"></i> Patients</a>
+<a href="/devices"><i class="bi bi-cpu"></i> Devices</a>
+<a href="/alerts"><i class="bi bi-bell"></i> Alerts</a>
+
+</div>
+
+<div class="content">
+
+<h4 class="mb-4">
+<i class="bi bi-person-plus"></i> Register New Patient
+</h4>
+
+<form method="POST">
+
+<!-- BASIC INFO -->
+
+<div class="form-card">
+
+<div class="section-title">Basic Information</div>
+
+<div class="row">
+
+<div class="col-md-6 mb-3">
+<label>Patient Name</label>
+<input type="text" name="name" class="form-control" placeholder="Full name">
+</div>
+
+<div class="col-md-3 mb-3">
+<label>Age</label>
+<input type="number" name="age" class="form-control" min="0" max="120">
+</div>
+
+<div class="col-md-3 mb-3">
+<label>Gender</label>
+<select name="gender" class="form-select">
+<option>Male</option>
+<option>Female</option>
+<option>Other</option>
+</select>
+</div>
+
+</div>
+
+<div class="mb-3">
+
+<label>Phone</label>
+<input type="text" name="phone" class="form-control" placeholder="+91XXXXXXXXXX">
+
+</div>
+
+<div class="mb-3">
+
+<label>Address</label>
+<textarea name="address" class="form-control" rows="2"></textarea>
+
+</div>
+
+</div>
+
+<!-- MEDICAL -->
+
+<div class="form-card">
+
+<div class="section-title">Medical Information</div>
+
+<div class="row">
+
+<div class="col-md-4 mb-3">
+
+<label>Blood Group</label>
+
+<select name="blood_group" class="form-select">
+
+<option>A+</option>
+<option>A-</option>
+<option>B+</option>
+<option>B-</option>
+<option>O+</option>
+<option>O-</option>
+<option>AB+</option>
+<option>AB-</option>
+
+</select>
+
+</div>
+
+<div class="col-md-4 mb-3">
+
+<label>Disease</label>
+<input type="text" name="disease" class="form-control" placeholder="Diagnosis">
+
+</div>
+
+<div class="col-md-4 mb-3">
+
+<label>Allergies</label>
+<input type="text" name="allergies" class="form-control" placeholder="Example: Penicillin">
+
+</div>
+
+</div>
+
+</div>
+
+<!-- ADMISSION -->
+
+<div class="form-card">
+
+<div class="section-title">Admission Details</div>
+
+<div class="row">
+
+<div class="col-md-4 mb-3">
+
+<label>Admission Date</label>
+<input type="date" name="admission_date" class="form-control">
+
+</div>
+
+<div class="col-md-4 mb-3">
+
+<label>Ward</label>
+<input type="text" name="ward" class="form-control">
+
+</div>
+
+<div class="col-md-4 mb-3">
+
+<label>Room</label>
+<input type="text" name="room" class="form-control">
+
+</div>
+
+</div>
+
+</div>
+
+<!-- MONITORING -->
+
+<div class="form-card">
+
+<div class="section-title">Monitoring Setup</div>
+
+<div class="row">
+
+<div class="col-md-4 mb-3">
+
+<label>Severity Level</label>
+
+<select name="severity" class="form-select">
+
+<option>Normal</option>
+<option>Moderate</option>
+<option>Critical</option>
+
+</select>
+
+</div>
+
+<div class="col-md-4 mb-3">
+
+<label>Assigned Doctor ID</label>
+<input type="number" name="doctor_id" class="form-control">
+
+</div>
+
+<div class="col-md-4 mb-3">
+
+<label>Device ID</label>
+<input type="number" name="device_id" class="form-control">
+
+</div>
+
+</div>
+
+</div>
+
+<!-- BILLING -->
+
+<div class="form-card">
+
+<div class="section-title">Billing</div>
+
+<select name="payment_status" class="form-select">
+
+<option>Pending</option>
+<option>Paid</option>
+
+</select>
+
+</div>
+
+<button class="btn btn-register w-100">
+
+<i class="bi bi-person-check"></i> Register Patient
+
+</button>
+
+</form>
+
+</div>
+
+</body>
+
+</html>

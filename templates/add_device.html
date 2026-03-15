@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>NightPulse | Add Device</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+
+body{
+background:#f4f7fb;
+font-family:Segoe UI;
+}
+
+.container{
+max-width:500px;
+}
+
+.card{
+border:none;
+border-radius:12px;
+box-shadow:0 8px 20px rgba(0,0,0,0.05);
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container mt-5">
+
+<div class="card p-4">
+
+<h4 class="mb-4">Add Monitoring Device</h4>
+
+<form method="POST">
+
+<div class="mb-3">
+
+<label class="form-label">Device Code</label>
+
+<input type="text" name="device_code" class="form-control" placeholder="Example: NP-101" required>
+
+</div>
+
+<div class="mb-3">
+
+<label class="form-label">Status</label>
+
+<select name="status" class="form-select">
+
+<option value="Active">Active</option>
+<option value="Charging">Charging</option>
+<option value="Offline">Offline</option>
+
+</select>
+
+</div>
+
+<div class="mb-3">
+
+<label class="form-label">Assigned Patient ID</label>
+
+<input type="number" name="assigned_patient" class="form-control" placeholder="Enter patient ID">
+
+</div>
+
+<button class="btn btn-success w-100">
+
+Add Device
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Patient Monitor</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+
+body{
+background:white;
+font-family:Segoe UI;
+}
+
+.card{
+border:none;
+box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+
+.card h2{
+font-size:38px;
+font-weight:bold;
+color:#0d6efd;
+}
+
+canvas{
+background:#f8f9fa;
+border-radius:6px;
+height:220px !important;
+}
+
+.ecg{
+background:black;
+border-radius:6px;
+}
+
+@keyframes beat{
+0%{transform:scale(1)}
+50%{transform:scale(1.3)}
+100%{transform:scale(1)}
+}
+
+.heart{
+font-size:32px;
+color:red;
+animation:beat 1s infinite;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container mt-4">
+
+<h3>Patient Monitoring</h3>
+
+<hr>
+
+<h5>{{patient.name}}</h5>
+<p>Disease: {{patient.disease}} | Room: {{patient.room}}</p>
+
+<div class="row">
+
+<div class="col-md-3">
+
+<div class="card p-3 text-center">
+
+<h6>Heart Rate (BPM)</h6>
+<h2 id="heart">80</h2>
+
+<span id="heart_status" class="badge bg-success">Normal</span>
+
+</div>
+
+</div>
+
+
+<div class="col-md-3">
+
+<div class="card p-3 text-center">
+
+<h6>Temperature (°C)</h6>
+<h2 id="temp">36.8</h2>
+
+<span id="temp_status" class="badge bg-success">Normal</span>
+
+</div>
+
+</div>
+
+
+<div class="col-md-3">
+
+<div class="card p-3 text-center">
+
+<h6>Blood Pressure</h6>
+<h2 id="bp">120/80</h2>
+
+</div>
+
+</div>
+
+
+<div class="col-md-3">
+
+<div class="card p-3 text-center">
+
+<h6>SpO₂ (%)</h6>
+<h2 id="spo2">98%</h2>
+
+</div>
+
+</div>
+
+</div>
+
+<hr>
+
+<h5>Vital Trends</h5>
+
+<div class="row">
+
+<div class="col-md-6">
+<canvas id="heartChart"></canvas>
+</div>
+
+<div class="col-md-6">
+<canvas id="tempChart"></canvas>
+</div>
+
+</div>
+
+<div class="row mt-4">
+
+<div class="col-md-6">
+<canvas id="bpChart"></canvas>
+</div>
+
+<div class="col-md-6">
+<canvas id="spo2Chart"></canvas>
+</div>
+
+</div>
+
+<hr>
+
+<div class="text-center">
+
+<span class="heart">❤️</span>
+
+<h5>ECG Monitor</h5>
+
+</div>
+
+<canvas id="ecgCanvas" class="ecg" width="900" height="200"></canvas>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+let labels=[]
+
+let heartData=[]
+let tempData=[]
+let bpData=[]
+let spo2Data=[]
+
+
+// CHARTS
+
+const heartChart=new Chart(document.getElementById("heartChart"),{
+type:'line',
+data:{labels:labels,datasets:[{label:'Heart Rate',data:heartData,borderColor:'red',tension:0.4}]},
+options:{animation:false,maintainAspectRatio:false}
+})
+
+const tempChart=new Chart(document.getElementById("tempChart"),{
+type:'line',
+data:{labels:labels,datasets:[{label:'Temperature',data:tempData,borderColor:'orange',tension:0.4}]},
+options:{animation:false,maintainAspectRatio:false}
+})
+
+const bpChart=new Chart(document.getElementById("bpChart"),{
+type:'line',
+data:{labels:labels,datasets:[{label:'Blood Pressure',data:bpData,borderColor:'blue',tension:0.4}]},
+options:{animation:false,maintainAspectRatio:false}
+})
+
+const spo2Chart=new Chart(document.getElementById("spo2Chart"),{
+type:'line',
+data:{labels:labels,datasets:[{label:'SpO₂',data:spo2Data,borderColor:'green',tension:0.4}]},
+options:{animation:false,maintainAspectRatio:false}
+})
+
+
+// SIMULATED VITALS
+
+let heart=80
+let temp=36.8
+let sys=120
+let dia=80
+let spo2=98
+
+function generateData(){
+
+heart+=Math.floor(Math.random()*6-3)
+temp+=Math.random()*0.2-0.1
+sys+=Math.floor(Math.random()*6-3)
+spo2+=Math.floor(Math.random()*2-1)
+
+document.getElementById("heart").innerText=Math.round(heart)
+document.getElementById("temp").innerText=temp.toFixed(1)
+document.getElementById("bp").innerText=Math.round(sys)+"/"+dia
+document.getElementById("spo2").innerText=spo2+"%"
+
+updateGraphs(heart,temp,sys,spo2)
+
+checkAlert(heart,temp)
+
+}
+
+
+// UPDATE GRAPHS
+
+function updateGraphs(heart,temp,bp,spo2){
+
+if(labels.length>20){
+
+labels.shift()
+heartData.shift()
+tempData.shift()
+bpData.shift()
+spo2Data.shift()
+
+}
+
+labels.push("")
+
+heartData.push(heart)
+tempData.push(temp)
+bpData.push(bp)
+spo2Data.push(spo2)
+
+heartChart.update()
+tempChart.update()
+bpChart.update()
+spo2Chart.update()
+
+}
+
+
+// ALERT SYSTEM
+
+function checkAlert(heart,temp){
+
+let heartStatus=document.getElementById("heart_status")
+let tempStatus=document.getElementById("temp_status")
+
+if(heart>120){
+
+heartStatus.innerText="Critical"
+heartStatus.className="badge bg-danger"
+
+fetch("/create_alert/{{patient.id}}/HeartRate")
+
+}
+
+else if(heart>100){
+
+heartStatus.innerText="Warning"
+heartStatus.className="badge bg-warning"
+
+}
+
+else{
+
+heartStatus.innerText="Normal"
+heartStatus.className="badge bg-success"
+
+}
+
+if(temp>38){
+
+tempStatus.innerText="Critical"
+tempStatus.className="badge bg-danger"
+
+fetch("/create_alert/{{patient.id}}/Temperature")
+
+}
+
+else{
+
+tempStatus.innerText="Normal"
+tempStatus.className="badge bg-success"
+
+}
+
+}
+
+setInterval(generateData,3000)
+
+
+// ECG ANIMATION
+
+const canvas=document.getElementById("ecgCanvas")
+const ctx=canvas.getContext("2d")
+
+let x=0
+let baseline=100
+
+function drawECG(){
+
+ctx.fillStyle="black"
+ctx.fillRect(0,0,canvas.width,canvas.height)
+
+ctx.strokeStyle="#00ff6a"
+ctx.lineWidth=2
+
+ctx.beginPath()
+
+for(let i=0;i<x;i++){
+
+let y=baseline
+
+if(i%120==0){y=baseline-60}
+else if(i%120==10){y=baseline+30}
+else if(i%120==20){y=baseline}
+
+ctx.lineTo(i,y)
+
+}
+
+ctx.stroke()
+
+x+=4
+
+if(x>canvas.width){
+x=0
+}
+
+requestAnimationFrame(drawECG)
+
+}
+
+drawECG()
+
+</script>
+
+</body>
+</html>

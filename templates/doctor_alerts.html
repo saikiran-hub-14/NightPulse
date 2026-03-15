@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>NightPulse | Alert History</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+
+body{
+background:#f4f7fb;
+font-family:Segoe UI;
+}
+
+.sidebar{
+height:100vh;
+background:#1f2d3d;
+color:white;
+padding:20px;
+position:fixed;
+width:220px;
+}
+
+.sidebar h3{
+color:#4dabf7;
+}
+
+.sidebar a{
+display:block;
+color:white;
+padding:10px;
+text-decoration:none;
+border-radius:6px;
+margin-bottom:8px;
+}
+
+.sidebar a:hover{
+background:#2f3e50;
+}
+
+.content{
+margin-left:240px;
+padding:30px;
+}
+
+.card{
+border:none;
+border-radius:12px;
+box-shadow:0 8px 20px rgba(0,0,0,0.05);
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- Sidebar -->
+
+<div class="sidebar">
+
+<h3>NightPulse</h3>
+
+<a href="/doctor_dashboard">
+<i class="bi bi-heart-pulse"></i> My Patients
+</a>
+
+<a href="/doctor_alerts">
+<i class="bi bi-bell"></i> Alerts
+</a>
+
+</div>
+
+
+<div class="content">
+
+<div class="text-end mb-3">
+
+<a href="/logout" class="btn btn-danger">
+Logout
+</a>
+
+</div>
+
+<div class="card p-4">
+
+<h4>
+<i class="bi bi-bell-fill text-danger"></i> Alert History
+</h4>
+
+<table class="table table-hover mt-3">
+
+<thead>
+
+<tr>
+<th>ID</th>
+<th>Patient</th>
+<th>Type</th>
+<th>Level</th>
+<th>Doctor Response</th>
+<th>Escalated</th>
+<th>Action</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for alert in alerts %}
+
+<tr>
+
+<td>{{alert.id}}</td>
+<td>{{alert.patient_id}}</td>
+<td>{{alert.alert_type}}</td>
+<td>
+
+{% if alert.alert_level == "Critical" %}
+<span class="badge bg-danger">Critical</span>
+{% else %}
+<span class="badge bg-warning">{{alert.alert_level}}</span>
+{% endif %}
+
+</td>
+
+<td>{{alert.doctor_response}}</td>
+
+<td>
+
+{% if alert.escalation_status == "Yes" %}
+<span class="badge bg-danger">Yes</span>
+{% else %}
+<span class="badge bg-secondary">No</span>
+{% endif %}
+
+</td>
+
+<td>
+
+{% if alert.doctor_response == "Pending" %}
+
+<a href="/resolve_alert/{{alert.id}}" class="btn btn-sm btn-success">
+
+<i class="bi bi-check-circle"></i>
+Acknowledge
+
+</a>
+
+{% else %}
+
+<span class="badge bg-success">
+Acknowledged
+</span>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</body>
+</html>
